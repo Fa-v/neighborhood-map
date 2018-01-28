@@ -1,0 +1,81 @@
+/**
+* Reseting margin, padding and border values for all browsers and setting a box-model
+*/
+*,
+html{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/*
+* All the elements from the DOM inherit box-sizing from the parent
+*/
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+/**
+* CSS variables
+*/
+:root {
+  --grey: #ecf0f1;
+  --dark-grey: #7f8c8d;
+  --main-fonts: sans-serif;
+  --paragraph-font-size: 16px;
+  --title-font-size: 24px;
+  --subtitle-font-size: 20px;
+}
+
+/*
+* Creates the layout for the page
+*/
+.container {
+  display: grid;
+  display: -ms-grid;
+  grid-template-columns: 20% 1fr;
+  -ms-grid-columns: 20% 1fr;
+  font-family: var(--main-fonts);
+}
+
+/*
+* Sets the elements for the places sections as flex elements
+*/
+.places-section {
+  display: flex;
+  flex-flow: column wrap;
+  background-color: var(--grey);
+  padding: 5%;
+}
+
+.places-list {
+  font-size: var(--paragraph-font-size);
+  list-style: none;
+  line-height: 24px;
+}
+
+.search-box {
+  font-size: var(--paragraph-font-size);
+  padding: 5px;
+  margin-bottom: 20px;
+  border: 3px solid var(--grey);
+}
+
+*:focus {
+  border: 3px solid var(--dark-grey);
+  outline: none;
+}
+
+/*
+* Sets the height to the map
+*/
+#map {
+  height: 100%;
+}

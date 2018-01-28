@@ -13,11 +13,11 @@
   <div class="container">
     <div class="places-section">
       <input class="search-box" type="text" placeholder="Search for name" />
-      <ul id="list" class="places-list">
-        <li></li>
+      <ul id="list" class="places-list" data-bind="foreach: wineriesNames">
+        <li data-bind="text: $data"></li>
       </ul>
     </div>
-    <div id="map"></div>
+    <div id="map" data-bind="googleMap"></div>
   </div>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBdJRlFQ3PS8weHyGfpKDDn2n11l2PUUC4&v=3"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>

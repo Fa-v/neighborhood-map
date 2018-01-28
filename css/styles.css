@@ -53,6 +53,7 @@ body {
   flex-flow: column wrap;
   background-color: var(--grey);
   padding: 5%;
+  min-height: 750px;
 }
 
 .places-list {

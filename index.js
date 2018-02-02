@@ -1,4 +1,4 @@
-import data from './data/madrid'
+import data from './data/madrid';
 
 (function () {
   'use strict';
@@ -7,7 +7,7 @@ import data from './data/madrid'
   let Winery = function (data) {
     this.name = ko.observable(data.name);
     this.latitude = ko.observable(data.lat);
-    this.longitude = ko.observable(data.lat);
+    this.longitude = ko.observable(data.lng);
 
     this.coords = ko.computed(function () {
       return {
@@ -15,6 +15,13 @@ import data from './data/madrid'
         'lng': this.longitude()
       }
     }, this);
+
+    /* creating markers as observables */
+    this.marker = ko.observable(new google.maps.Marker({
+      position: this.coords(),
+      title: this.name(),
+      animation: google.maps.Animation.DROP
+    }));
   }
 
   /* main view model */
@@ -31,12 +38,22 @@ import data from './data/madrid'
 
   /* custom bindings */
   ko.bindingHandlers.googleMap = {
-    init: function(element, valueAccessor, allBindings, viewModel, bindingContext) {
-      let context = bindingContext.$data;
-      context.map = new google.maps.Map(element, {
+    init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
+      /* the modelData has all the properties of the Winery class */
+      const modelData = bindingContext.$data;
+
+      modelData.map = new google.maps.Map(element, {
         center: { lat: 40.416775, lng: -3.703790 },
         zoom: 10
       });
+    },
+    update: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
+      const modelData = bindingContext.$data;
+      /* placing markers on the map */
+      modelData.wineries().forEach(place => {
+        place.marker().setMap(modelData.map);
+      })
+
     }
   }
 

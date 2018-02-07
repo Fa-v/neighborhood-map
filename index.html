@@ -12,15 +12,23 @@
 <body>
   <div class="container">
     <div class="places-section">
-      <input class="search-box" type="text" placeholder="Search for name" />
-      <ul id="list" class="places-list" data-bind="foreach: wineriesNames">
-        <li data-bind="text: $data"></li>
+      <input
+        id="route-input"
+        class="search-box"
+        type="text"
+        placeholder="Search for name"
+        data-bind="value: searchText, valueUpdate: 'keyup'"
+      />
+      <ul id="list" class="places-list" data-bind="foreach: filterWineries">
+        <li data-bind="text: name, click: $parent.showMarker"></li>
       </ul>
     </div>
     <div id="map" data-bind="googleMap"></div>
   </div>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBdJRlFQ3PS8weHyGfpKDDn2n11l2PUUC4&v=3"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
+ <!--  <script src="data/routesData.js"></script> -->
   <script src="./index.js"></script>
 </body>
 

@@ -80,3 +80,7 @@ body {
 #map {
   height: 100%;
 }
+
+#wineryDetail {
+  display: none;
+}

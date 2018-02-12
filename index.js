@@ -6,8 +6,12 @@ $(function () {
   /* data that represents a single winery */
   let Winery = function (winery) {
     this.name = ko.observable(winery.name);
+    this.address = ko.observable(winery.address);
     this.latitude = ko.observable(winery.lat);
     this.longitude = ko.observable(winery.lng);
+    this.venueId = ko.observable(winery.venueId);
+    this.photos = ko.observableArray([]);
+    this.requestNotMade = ko.observable(true);
 
     this.coords = ko.computed(function () {
       return {
@@ -24,6 +28,41 @@ $(function () {
     }));
   };
 
+  function getFoursquareData (winery) {
+    const lat = winery.latitude();
+    const lng = winery.longitude();
+    const name = encodeURI(winery.name());
+    const venueId = winery.venueId();
+    const categories = `&categoryId=4bf58dd8d48988d14b941735,4bf58dd8d48988d119951735`;
+    const limit = 5;
+    const baseUrl = `https://api.foursquare.com/v2/venues/${venueId}`;
+    const clientInfo = `?client_id=K44JY0THSY3L2X0VRKZ1JY2FEQULQVSTDIFOZDNNHTURX3ZF
+      &client_secret=TSK1DF0XMZKHZFZYMA3Q0XXGA5FIWO4OWQM4OTTECLHUPZJJ`;
+    const versionDate = `&v=20180211`;
+    const coords = `&ll=${lat},${lng}`;
+    const searchRadius = `&intent=checkin&radius=500`;
+    const resultLimit = `&limit=${limit}`;
+    const query = `&query=${name}`;
+    const url = baseUrl.concat(clientInfo, versionDate);
+
+    venueId && winery.requestNotMade() && $.ajax({
+      dataType: "json",
+      url: url,
+      success: function (data) {
+        winery.requestNotMade(false);
+        let photos = data.response.venue.photos.groups[0].items;
+        photos.length > 0 && photos.forEach(photo => {
+          let photoUrl = photo.prefix.concat("cap300", photo.suffix);
+          winery.photos.push(photoUrl);
+        });
+      },
+      error: function () {
+        console.log("Error getting foursquare data");
+      }
+    });
+  };
+
+
   /* main view model */
   let viewModel = function (data) {
     this.wineryNames = ko.observableArray([]);
@@ -31,6 +70,7 @@ $(function () {
     this.selectedWinery = ko.observable(null);
     this.searchText = ko.observable('');
     this.map = null;
+    this.infoWindow = null;
 
     for (var winery in data) {
       this.wineryNames.push(winery.name);
@@ -43,6 +83,7 @@ $(function () {
         winery.marker().setAnimation(null);
       }, 2000);
       this.selectedWinery(winery);
+      getFoursquareData(winery);
     }.bind(this);
 
     this.filterWineries = ko.computed(function () {
@@ -79,8 +120,11 @@ $(function () {
       filteredWineries.forEach(winery => {
         const marker = winery.marker()
         marker.setMap(modelData.map);
-        marker.addListener('click', function () {
+
+        google.maps.event.clearListeners(marker, 'click');
+        google.maps.event.addListener(marker, 'click', function () {
           console.log('marker clicked!');
+          modelData.showMarker(winery);
         });
       });
 
@@ -88,6 +132,34 @@ $(function () {
         winery.marker().setMap(null)
       });
 
+    }
+  };
+
+  ko.bindingHandlers.createInfoWindow = {
+    init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
+      const modelData = bindingContext.$data;
+      modelData.infoWindow = new google.maps.InfoWindow({
+        content: '<div id="infoWindow"></div>'
+      });
+    },
+    update: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
+      const modelData = bindingContext.$data;
+      const infoWindow = modelData.infoWindow;
+      var winery = valueAccessor().winery();
+
+      infoWindow.close();
+
+      if (winery) {
+        var photos = winery.photos();
+        infoWindow.open(modelData.map, winery.marker());
+      }
+      // winery && infoWindow.open(modelData.map, winery.marker());
+
+      google.maps.event.addListener(infoWindow, 'domready', function () {
+        const windowContent = $('#wineryDetail').html();
+        $('#infoWindow').html(windowContent);
+
+      });
     }
   }
 

@@ -11,6 +11,8 @@ $(function () {
     this.longitude = ko.observable(winery.lng);
     this.venueId = ko.observable(winery.venueId);
     this.photos = ko.observableArray([]);
+    this.likes = ko.observable();
+    this.webSite = ko.observable(winery.web);
     this.requestNotMade = ko.observable(true);
 
     this.coords = ko.computed(function () {
@@ -24,7 +26,8 @@ $(function () {
     this.marker = ko.observable(new google.maps.Marker({
       position: this.coords(),
       title: this.name(),
-      animation: google.maps.Animation.DROP
+      animation: google.maps.Animation.DROP,
+      icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Bunch_of_grapes_icon.svg/32px-Bunch_of_grapes_icon.svg.png'
     }));
   };
 
@@ -50,10 +53,12 @@ $(function () {
       url: url,
       success: function (data) {
         winery.requestNotMade(false);
-        let photos = data.response.venue.photos.groups[0].items;
+        let hasPhotos = data.response.venue.photos.groups.length > 0;
+        let photos = (hasPhotos && data.response.venue.photos.groups[0].items) || [];
         photos.length > 0 && photos.forEach(photo => {
-          let photoUrl = photo.prefix.concat("cap300", photo.suffix);
+          let photoUrl = photo.prefix.concat("width300", photo.suffix);
           winery.photos.push(photoUrl);
+          winery.likes(data.response.venue.likes.summary);
         });
       },
       error: function () {
@@ -102,10 +107,11 @@ $(function () {
       /* the modelData has all the properties of the Winery class */
       const modelData = bindingContext.$data;
       modelData.map = new google.maps.Map(element, {
-        center: { lat: 40.416775, lng: -3.703790 },
+        center: { lat: 40.3050155, lng: -3.7694212 },
         zoom: 10,
         mapTypeControl: false,
-        fullscreenControl: false
+        fullscreenControl: false,
+        gestureHandling: 'cooperative'
       });
     },
     update: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
@@ -123,8 +129,10 @@ $(function () {
 
         google.maps.event.clearListeners(marker, 'click');
         google.maps.event.addListener(marker, 'click', function () {
-          console.log('marker clicked!');
           modelData.showMarker(winery);
+
+          modelData.map.setZoom(12);
+          modelData.map.setCenter(marker.getPosition());
         });
       });
 
@@ -139,12 +147,14 @@ $(function () {
     init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
       const modelData = bindingContext.$data;
       modelData.infoWindow = new google.maps.InfoWindow({
-        content: '<div id="infoWindow"></div>'
+        content: '<div id="infoWindow"></div>',
+        maxWidth: 300
       });
     },
     update: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
       const modelData = bindingContext.$data;
       const infoWindow = modelData.infoWindow;
+      const wineries = modelData.wineries();
       var winery = valueAccessor().winery();
 
       infoWindow.close();
@@ -153,7 +163,6 @@ $(function () {
         var photos = winery.photos();
         infoWindow.open(modelData.map, winery.marker());
       }
-      // winery && infoWindow.open(modelData.map, winery.marker());
 
       google.maps.event.addListener(infoWindow, 'domready', function () {
         const windowContent = $('#wineryDetail').html();

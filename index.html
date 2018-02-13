@@ -15,14 +15,18 @@
       <input id="route-input" class="search-box" type="text" placeholder="Search for name" data-bind="value: searchText, valueUpdate: 'keyup'"
       />
       <ul id="list" class="places-list" data-bind="foreach: filterWineries">
-        <li data-bind="text: name, click: $parent.showMarker"></li>
+        <li class="list-item" data-bind="text: name, click: $parent.showMarker"></li>
       </ul>
     </div>
     <div id="map" data-bind="googleMap, createInfoWindow: {winery: selectedWinery}"></div>
     <div id="wineryDetail" data-bind="with: selectedWinery">
-      <h3 data-bind="text: name"></h3>
-      <p data-bind="text: address"></p>
-      <div class="info-photos" data-bind="visible: photos().length > 0">
+      <h3 class="detail-content detail-name" data-bind="text: name"></h3>
+      <a class="site-link" data-bind="attr: {href: webSite}">
+        <p class="site-link" data-bind="text: webSite"></p>
+      </a>
+      <p class="detail-content" data-bind="text: address"></p>
+      <p class="detail-content" data-bind="text: likes"></p>
+      <div class="infoWindow-photos" data-bind="visible: photos().length > 0">
         <div data-bind="foreach: photos">
           <img data-bind="attr: {src: $data}" />
         </div>

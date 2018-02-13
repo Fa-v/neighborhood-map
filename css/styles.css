@@ -1,5 +1,5 @@
 /**
-* Reseting margin, padding and border values for all browsers and setting a box-model
+* Resetting margin, padding and border values for all browsers and setting a box-model
 */
 *,
 html{
@@ -26,61 +26,113 @@ body {
 * CSS variables
 */
 :root {
-  --grey: #ecf0f1;
+ /*  --white: #eee; */
+  --grey: #eee;
   --dark-grey: #7f8c8d;
+  --dark-blue: #1C2833;
   --main-fonts: sans-serif;
-  --paragraph-font-size: 16px;
-  --title-font-size: 24px;
-  --subtitle-font-size: 20px;
+  --paragraph-font-size: 1em;
+  --title-font-size: 1.5em;
+  --subtitle-font-size: 1.2em;
 }
 
 /*
 * Creates the layout for the page
 */
 .container {
-  display: grid;
-  display: -ms-grid;
-  grid-template-columns: 20% 1fr;
-  -ms-grid-columns: 20% 1fr;
-  font-family: var(--main-fonts);
+  display: flex;
+  flex-flow: row nowrap;
+  height: 100%;
 }
 
 /*
 * Sets the elements for the places sections as flex elements
 */
 .places-section {
-  display: flex;
-  flex-flow: column wrap;
-  background-color: var(--grey);
-  padding: 5%;
-  min-height: 750px;
+  background-color: var(--grey, #eee);
+  padding: 20px;
+  width: 25%;
 }
 
 .places-list {
+  display: flex;
+  flex-flow: column wrap;
   font-size: var(--paragraph-font-size);
   list-style: none;
-  line-height: 24px;
+  line-height: 2em;
+  color:  var(--dark-blue, #1C2833);
+}
+
+.list-item:hover {
+  cursor: pointer;
+  font-weight: bold;
 }
 
 .search-box {
   font-size: var(--paragraph-font-size);
   padding: 5px;
   margin-bottom: 20px;
-  border: 3px solid var(--grey);
+  border-bottom: 2px solid var(--dark-blue, #1C2833);
 }
 
 *:focus {
-  border: 3px solid var(--dark-grey);
   outline: none;
+  box-shadow: 2px 2px 4px var(--dark-grey, #7f8c8d);
 }
 
 /*
 * Sets the height to the map
 */
 #map {
+  bottom: 0px;
   height: 100%;
+  width: 75%;
+  right: 0px;
 }
 
 #wineryDetail {
   display: none;
+}
+
+#infoWindow {
+  max-height: 300px;
+}
+
+.detail-name {
+  font-family: var(--main-fonts);
+  font-size: var(--title-font-size);
+  /* margin: 10px; */
+}
+
+.detail-content, p {
+  font-family: var(--main-fonts);
+  font-size: var(--subtitle-font-size);
+  justify-content: flex-start;
+  margin: 10px;
+}
+
+.site-link {
+  color: var(--dark-blue, #1C2833);
+  font-size: var(--paragraph-font-size);
+}
+
+.site-link:hover{
+  font-weight: bold;
+}
+
+@media (max-width: 600px) {
+  .container {
+    flex-flow: row wrap;
+  }
+  .places-section {
+    flex: 1;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: scroll;
+    padding: 20px;
+  }
+
+  #map {
+    width: 100%;
+  }
 }

@@ -12,34 +12,52 @@
 <body>
   <div class="container">
     <div class="places-section">
-      <input id="route-input" class="search-box" type="text" placeholder="Search for name" data-bind="value: searchText, valueUpdate: 'keyup'"
+      <input
+        id="route-input"
+        class="search-box"
+        type="text"
+        placeholder="Search for name"
+        data-bind="value: searchText, valueUpdate: 'keyup'"
       />
       <ul id="list" class="places-list" data-bind="foreach: filterWineries">
         <li class="list-item" data-bind="text: name, click: $parent.showMarker"></li>
       </ul>
     </div>
+
     <div id="map" data-bind="googleMap, createInfoWindow: {winery: selectedWinery}"></div>
+
     <div id="wineryDetail" data-bind="with: selectedWinery">
       <h3 class="detail-content detail-name" data-bind="text: name"></h3>
       <a class="site-link" data-bind="attr: {href: webSite}">
         <p class="site-link" data-bind="text: webSite"></p>
       </a>
       <p class="detail-content" data-bind="text: address"></p>
+      <p class="detail-content" data-bind="if: fSquareCategory" >
+        Category: <span data-bind="text: fSquareCategory"></span>
+      </p>
       <p class="detail-content" data-bind="text: likes"></p>
+
       <div class="infoWindow-photos" data-bind="visible: photos().length > 0">
         <div data-bind="foreach: photos">
           <img data-bind="attr: {src: $data}" />
         </div>
+        <a class="site-link" data-bind="attr: {href: fSquareLink}">
+          <img src="./images/Powered-by-Foursquare-one-color-300.png" alt="Foursquare logo">
+        </a>
       </div>
+
       <div class="info-photos" data-bind="visible: photos().length === 0">
-          <p>Photos not found</p>
-        </div>
+        <p>No photos found</p>
+      </div>
+
+      <div class="error" data-bind="if: requestError">
+        <p data-bind="text: requestError"></p>
+      </div>
     </div>
   </div>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBdJRlFQ3PS8weHyGfpKDDn2n11l2PUUC4&v=3"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
-  <!--  <script src="data/routesData.js"></script> -->
   <script src="./index.js"></script>
 </body>
 

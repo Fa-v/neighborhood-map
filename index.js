@@ -3,7 +3,10 @@ import jsonData from './data/madrid';
 $(function () {
   'use strict';
 
-  /* data that represents a single winery */
+/**
+ * @description Data that represents a single winery
+ * @param {array} winery
+ */
   let Winery = function (winery) {
     this.name = ko.observable(winery.name);
     this.address = ko.observable(winery.address);
@@ -12,8 +15,11 @@ $(function () {
     this.venueId = ko.observable(winery.venueId);
     this.photos = ko.observableArray([]);
     this.likes = ko.observable();
+    this.fSquareLink = ko.observable();
+    this.fSquareCategory = ko.observable(null);
     this.webSite = ko.observable(winery.web);
     this.requestNotMade = ko.observable(true);
+    this.requestError = ko.observable(null);
 
     this.coords = ko.computed(function () {
       return {
@@ -31,44 +37,47 @@ $(function () {
     }));
   };
 
+/**
+ * @description Calls the foursquare API and retrieves the data
+ * @param {object} winery instance of a winery
+ */
   function getFoursquareData (winery) {
-    const lat = winery.latitude();
-    const lng = winery.longitude();
-    const name = encodeURI(winery.name());
     const venueId = winery.venueId();
-    const categories = `&categoryId=4bf58dd8d48988d14b941735,4bf58dd8d48988d119951735`;
-    const limit = 5;
     const baseUrl = `https://api.foursquare.com/v2/venues/${venueId}`;
     const clientInfo = `?client_id=K44JY0THSY3L2X0VRKZ1JY2FEQULQVSTDIFOZDNNHTURX3ZF
       &client_secret=TSK1DF0XMZKHZFZYMA3Q0XXGA5FIWO4OWQM4OTTECLHUPZJJ`;
     const versionDate = `&v=20180211`;
-    const coords = `&ll=${lat},${lng}`;
-    const searchRadius = `&intent=checkin&radius=500`;
-    const resultLimit = `&limit=${limit}`;
-    const query = `&query=${name}`;
     const url = baseUrl.concat(clientInfo, versionDate);
 
     venueId && winery.requestNotMade() && $.ajax({
-      dataType: "json",
+      dataType: 'json',
       url: url,
       success: function (data) {
+        const hasPhotos = data.response.venue.photos.groups.length > 0;
+        const photos = (hasPhotos && data.response.venue.photos.groups[0].items) || [];
+
         winery.requestNotMade(false);
-        let hasPhotos = data.response.venue.photos.groups.length > 0;
-        let photos = (hasPhotos && data.response.venue.photos.groups[0].items) || [];
+
         photos.length > 0 && photos.forEach(photo => {
-          let photoUrl = photo.prefix.concat("width300", photo.suffix);
+          const photoUrl = photo.prefix.concat('width300', photo.suffix);
+
           winery.photos.push(photoUrl);
           winery.likes(data.response.venue.likes.summary);
+          winery.fSquareLink(data.response.venue.canonicalUrl);
+          winery.fSquareCategory(data.response.venue.categories[0].name);
         });
       },
       error: function () {
-        console.log("Error getting foursquare data");
+        winery.requestError('Error getting foursquare data.');
       }
     });
   };
 
 
-  /* main view model */
+/**
+ * @description Main view model
+ * @param {array} data from the data file
+ */
   let viewModel = function (data) {
     this.wineryNames = ko.observableArray([]);
     this.wineries = ko.observableArray([]);
@@ -84,15 +93,18 @@ $(function () {
 
     this.showMarker = function (winery) {
       winery.marker().setAnimation(google.maps.Animation.BOUNCE);
+
       window.setTimeout(function () {
         winery.marker().setAnimation(null);
       }, 2000);
+
       this.selectedWinery(winery);
+
       getFoursquareData(winery);
     }.bind(this);
 
     this.filterWineries = ko.computed(function () {
-      let search = this.searchText().toLowerCase();
+      const search = this.searchText().toLowerCase();
 
       return ko.utils.arrayFilter(this.wineries(), function (winery) {
         return winery.name().toLowerCase().indexOf(search) >= 0;
@@ -101,11 +113,14 @@ $(function () {
 
   }.bind(this);
 
-  /* custom bindings */
+/**
+ * @description custom binding for the map
+ */
   ko.bindingHandlers.googleMap = {
     init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
       /* the modelData has all the properties of the Winery class */
       const modelData = bindingContext.$data;
+
       modelData.map = new google.maps.Map(element, {
         center: { lat: 40.3050155, lng: -3.7694212 },
         zoom: 10,
@@ -124,13 +139,13 @@ $(function () {
       });
 
       filteredWineries.forEach(winery => {
-        const marker = winery.marker()
+        const marker = winery.marker();
+
         marker.setMap(modelData.map);
 
         google.maps.event.clearListeners(marker, 'click');
         google.maps.event.addListener(marker, 'click', function () {
           modelData.showMarker(winery);
-
           modelData.map.setZoom(12);
           modelData.map.setCenter(marker.getPosition());
         });
@@ -139,13 +154,16 @@ $(function () {
       markersToRemove && markersToRemove.forEach(winery => {
         winery.marker().setMap(null)
       });
-
     }
   };
 
+/**
+ * @description custom binding for the info window
+ */
   ko.bindingHandlers.createInfoWindow = {
     init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
       const modelData = bindingContext.$data;
+
       modelData.infoWindow = new google.maps.InfoWindow({
         content: '<div id="infoWindow"></div>',
         maxWidth: 300
@@ -155,23 +173,26 @@ $(function () {
       const modelData = bindingContext.$data;
       const infoWindow = modelData.infoWindow;
       const wineries = modelData.wineries();
-      var winery = valueAccessor().winery();
+      const winery = valueAccessor().winery();
 
       infoWindow.close();
 
       if (winery) {
-        var photos = winery.photos();
+        const photos = winery.photos();
+
         infoWindow.open(modelData.map, winery.marker());
       }
 
       google.maps.event.addListener(infoWindow, 'domready', function () {
         const windowContent = $('#wineryDetail').html();
-        $('#infoWindow').html(windowContent);
 
+        $('#infoWindow').html(windowContent);
       });
     }
   }
 
+/**
+ * @description creating the binding for the view model
+ */
   ko.applyBindings(new viewModel(jsonData || {}));
-
 }());

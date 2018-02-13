@@ -26,7 +26,6 @@ body {
 * CSS variables
 */
 :root {
- /*  --white: #eee; */
   --grey: #eee;
   --dark-grey: #7f8c8d;
   --dark-blue: #1C2833;
@@ -57,7 +56,8 @@ body {
 .places-list {
   display: flex;
   flex-flow: column wrap;
-  font-size: var(--paragraph-font-size);
+  font-size: var(--paragraph-font-size, 1em);
+  font-family: var(--main-fonts);
   list-style: none;
   line-height: 2em;
   color:  var(--dark-blue, #1C2833);
@@ -66,18 +66,20 @@ body {
 .list-item:hover {
   cursor: pointer;
   font-weight: bold;
+  color: purple;
 }
 
 .search-box {
-  font-size: var(--paragraph-font-size);
+  font-size: var(--paragraph-font-size, 1em);
   padding: 5px;
   margin-bottom: 20px;
   border-bottom: 2px solid var(--dark-blue, #1C2833);
+  width: 255px;
 }
 
 *:focus {
   outline: none;
-  box-shadow: 2px 2px 4px var(--dark-grey, #7f8c8d);
+  border-bottom: 2px solid purple;
 }
 
 /*
@@ -100,24 +102,27 @@ body {
 
 .detail-name {
   font-family: var(--main-fonts);
-  font-size: var(--title-font-size);
-  /* margin: 10px; */
+  font-size: var(--title-font-size, 1.5em);
 }
 
 .detail-content, p {
   font-family: var(--main-fonts);
-  font-size: var(--subtitle-font-size);
+  font-size: var(--subtitle-font-size, 1.2em);
   justify-content: flex-start;
   margin: 10px;
 }
 
 .site-link {
   color: var(--dark-blue, #1C2833);
-  font-size: var(--paragraph-font-size);
+  font-size: var(--paragraph-font-size, 1em);
 }
 
-.site-link:hover{
+.site-link:hover {
   font-weight: bold;
+}
+
+.error {
+  color: red;
 }
 
 @media (max-width: 600px) {

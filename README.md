@@ -1,3 +1,5 @@
+# Neighborhood Map: wineries in Madrid.
+
 This is the last project for the Udacity's front-end web development nanodegree.
 
 The main goal of this project is to learn about design patterns using a framework, in this case [knockout.js](http://knockoutjs.com/index.html),and using third-party APIs (Google maps and Foursquare).

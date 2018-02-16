@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title><%= htmlWebpackPlugin.options.title %></title>
+</head>
+
+<body>
+  <main class="container">
+    <section class="places-section">
+      <label for="route-input">Search for name</label>
+      <input
+        id="route-input"
+        class="search-box"
+        type="text"
+        data-bind="value: searchText, valueUpdate: 'keyup'"
+      />
+      <ul id="list" class="places-list" data-bind="foreach: filterWineries">
+        <li class="list-item" data-bind="text: name, click: $parent.showMarker"></li>
+      </ul>
+    </section>
+
+    <section id="map" data-bind="googleMap, createInfoWindow: {winery: selectedWinery}"></section>
+
+    <article id="wineryDetail" data-bind="with: selectedWinery">
+      <h3 class="detail-content detail-name" data-bind="text: name"></h3>
+      <a class="site-link" data-bind="attr: {href: webSite}">
+        <p class="site-link" data-bind="text: webSite"></p>
+      </a>
+      <a class="site-link" data-bind="attr: {href: fSquareLink}">
+        <p class="site-link">Foursquare page</p>
+      </a>
+      <p class="detail-content" data-bind="text: address"></p>
+      <p class="detail-content" data-bind="if: fSquareCategory" >
+        Category: <span data-bind="text: fSquareCategory"></span>
+      </p>
+      <p class="detail-content" data-bind="text: likes"></p>
+      <img id="fSquareLogo" alt="Foursquare logo">
+
+      <div class="infoWindow-photos" data-bind="visible: photos().length > 0">
+        <div data-bind="foreach: photos">
+          <img data-bind="attr: {src: $data}" alt="Winery photos" />
+        </div>
+      </div>
+
+      <div class="info-photos" data-bind="visible: photos().length === 0">
+        <p>No photos found</p>
+      </div>
+
+      <div class="error" data-bind="if: requestError">
+        <p data-bind="text: requestError"></p>
+      </div>
+    </article>
+  </main>
+
+</body>
+
+</html>

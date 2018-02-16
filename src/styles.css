@@ -20,6 +20,7 @@ html{
 html,
 body {
   height: 100%;
+  font-family: var(--main-fonts);
 }
 
 /**
@@ -55,12 +56,13 @@ body {
 
 .places-list {
   display: flex;
-  flex-flow: column wrap;
+  flex-flow: column nowrap;
   font-size: var(--paragraph-font-size, 1em);
-  font-family: var(--main-fonts);
   list-style: none;
   line-height: 2em;
   color:  var(--dark-blue, #1C2833);
+  max-height: 700px;
+  overflow-y: scroll;
 }
 
 .list-item:hover {
@@ -72,7 +74,7 @@ body {
 .search-box {
   font-size: var(--paragraph-font-size, 1em);
   padding: 5px;
-  margin-bottom: 20px;
+  margin: 5px 0 20px 0;
   border-bottom: 2px solid var(--dark-blue, #1C2833);
   width: 255px;
 }
@@ -101,12 +103,10 @@ body {
 }
 
 .detail-name {
-  font-family: var(--main-fonts);
   font-size: var(--title-font-size, 1.5em);
 }
 
 .detail-content, p {
-  font-family: var(--main-fonts);
   font-size: var(--subtitle-font-size, 1.2em);
   justify-content: flex-start;
   margin: 10px;
@@ -121,8 +121,13 @@ body {
   font-weight: bold;
 }
 
-.error {
+.error-message {
   color: red;
+}
+
+label {
+  color:  var(--dark-blue, #1C2833);
+  font-size: var(--subtitle-font-size, 1.2em);
 }
 
 @media (max-width: 600px) {

@@ -81,7 +81,7 @@ function getFoursquareData(winery) {
   const versionDate = `&v=20180211`;
   const url = baseUrl.concat(clientInfo, versionDate);
 
-  venueId && winery.requestNotMade() && $.ajax({
+  winery.requestNotMade() && $.ajax({
     dataType: 'json',
     url: url,
     success: function (data) {
@@ -166,7 +166,7 @@ ko.bindingHandlers.googleMap = {
       google.maps.event.clearListeners(marker, 'click');
       google.maps.event.addListener(marker, 'click', function () {
         modelData.showMarker(winery);
-        modelData.map.setZoom(9);
+        modelData.map.setZoom(12);
         modelData.map.setCenter(marker.getPosition());
       });
     });

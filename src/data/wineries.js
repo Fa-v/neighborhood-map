@@ -8,14 +8,6 @@ const jsonData = [
     "web": "http://www.bodegasennavalcarnero.es/"
   },
   {
-    "name": "Bodega Andrés Morate",
-    "address": "Camino de Horcajuelo s/n. Belmonte del Tajo",
-    "lat": 40.1349649,
-    "lng": -3.3360592,
-    "venueId": "4e12ca261838f8ad8167e7ce",
-    "web": "http://www.andresmorate.com/"
-  },
-  {
     "name": "Bodega El Regajal",
     "address": "Antigua Carretera de Andalucía, Km 50.5, 28300, Aranjuez, Madrid, España",
     "lat": 40.0077499,
@@ -62,13 +54,6 @@ const jsonData = [
     "venueId": "4f097e16e4b09d21f7a55d6a"
   },
   {
-    "name": "Bodega Alceño",
-    "address": "Barrio Iglesias 55. Apartado de Correos 52, 30520  Jumilla, Murcia. España",
-    "lat": 38.4791251,
-    "lng": -1.323725,
-    "venueId": "4bf58dd8d48988d14b941735"
-  },
-  {
     "name": "Bodegas Silvano Garcia",
       "address": "Av. de Murcia, 29, 30520, Jumilla, Murcia",
       "lat": 38.47501176400975,
@@ -90,13 +75,6 @@ const jsonData = [
     "venueId": "4c7f745e2042b1f72cdbc2ad"
   },
   {
-    "name": "Bodegas Carballal",
-    "address": "Carballal, 3 C.P. - 36636 Ribadumia",
-    "lat": 42.4912729,
-    "lng": -8.7664001,
-    "venueId": "513a6f55582f238e3035e76e"
-  },
-  {
     "name": "Lagar de Pintos, S.L.",
     "address": "Calle Cabanelas 6, 36636  Ribadumia, Pontevedra Galicia",
     "lat": 42.5150549,
@@ -116,13 +94,6 @@ const jsonData = [
     "lat": 37.584215,
     "lng": -4.641954,
     "venueId": "4c501f2edcb5d13a76637308"
-  },
-  {
-    "name": "Bodegas Navarro",
-    "address": "Av de Antonio Y Miguel Navarro 1, 14550 Montilla, Córdoba, España.",
-    "lat": 37.583435285136204,
-    "lng": -4.64055786022368,
-    "venueId": "5416c0aa498ec356dce72672"
   },
   {
     "name": "Bodegas Marco Real, S.A.",
@@ -237,13 +208,6 @@ const jsonData = [
     "venueId": "4fd5c574e4b0d43255abebca"
   },
   {
-    "name": "Bodega Benito",
-    "address": "Plaza Pascual Carrión 10, 46340  Requena, Valencia-València",
-    "lat": 39.4902795,
-    "lng": -1.101963,
-    "venueId": "4e25a2c3b0fbf642a9006d67"
-  },
-  {
     "name": "Aranleón",
     "address": "Carretera De Caudete 3, 46310  Los Marcos, Venta del Moro, Valencia-València",
     "lat": 39.4940681,
@@ -251,25 +215,11 @@ const jsonData = [
     "venueId": "51fe6c9bccdaca4e241f6ff8"
   },
   {
-    "name": "Vinya els Vilars",
-    "address": "Camí Puig-Grós, 25140  Arbeca, Lleida (Cataluña)",
-    "lat": 41.5464295,
-    "lng": 0.9132117,
-    "venueId": "51a9bf54498eb91d2b870dc9"
-  },
-  {
     "name": "Castell del Remei",
     "address": "Finca Castell del Remei s/n, 25333  Castell del Remei, Penelles, Lleida (Cataluña)",
     "lat": 41.7196877,
     "lng": 0.9692667,
     "venueId": "4db3fc4a93a017099dcf93de"
-  },
-  {
-    "name": "Vila Corona",
-    "address": "Camí Els Nerets s/n, 25654  Vilamitjana, Tremp, Lleida (Cataluña)",
-    "lat": 42.1558898,
-    "lng": 0.9215383,
-    "venueId": "4ee32f390e011d5244ed64ca"
   },
   {
     "name": "Bodegas Costers del Sió",
@@ -298,20 +248,6 @@ const jsonData = [
     "lat": 42.5340559,
     "lng": -6.6871601,
     "venueId": "4ee1ea9229c20563bb735700"
-  },
-  {
-    "name": "Pérez Caramés",
-    "address": "Calle Peña Picón, 24500 Villafranca del Bierzo, León (Castilla y León)",
-    "lat": 42.6058472,
-    "lng": -6.8114939,
-    "venueId": "574333ee498e6896a9a49fe8"
-  },
-  {
-    "name": "Bodega Renalterra",
-    "address": "Plaza Mayor, 2, 9370 Gumiel de Izán, Burgos (Castilla y León)",
-    "lat": 41.773304,
-    "lng": -3.6899225,
-    "venueId": "50683bd2e412c2e65a2251ab"
   },
   {
     "name": "Bodegas Arzuaga Navarro",
@@ -509,13 +445,6 @@ const jsonData = [
     "lat": 41.3318165,
     "lng": -1.2188512,
     "venueId": "4e06117862e100e58166ef21"
-  },
-  {
-    "name": "Bodegas Heredad Ansón",
-    "address": "Calle Camino Las Eras s/n, 50450 Muel, Zaragoza (Aragón)",
-    "lat": 41.4643806,
-    "lng": -1.0888688,
-    "venueId": "536a319811d247e423234373"
   },
   {
     "name": "Grandes Vinos",

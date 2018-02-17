@@ -61,7 +61,7 @@ body {
   list-style: none;
   line-height: 2em;
   color:  var(--dark-blue, #1C2833);
-  max-height: 700px;
+  max-height: 90%;
   overflow-y: scroll;
 }
 

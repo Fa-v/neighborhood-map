@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Neighborhood Map</title>
+  <link rel="stylesheet" href="./css/styles.css">
+</head>
+
+<body>
+  <main class="container">
+    <section class="places-section">
+      <label for="route-input">Search for name</label>
+      <input id="route-input" class="search-box" type="text" data-bind="textInput: searchText, valueUpdate: 'keyup'" />
+      <ul id="list" class="places-list" data-bind="foreach: filterWineries">
+        <li class="list-item" data-bind="text: name, click: $parent.showMarker"></li>
+      </ul>
+    </section>
+
+    <section id="map" data-bind="googleMap, createInfoWindow: {winery: selectedWinery}" class="map-canvas"></section>
+
+    <article id="wineryDetail" class="winery-detail" data-bind="with: selectedWinery">
+      <h3 class="detail-content detail-name" data-bind="text: name"></h3>
+      <a class="site-link" data-bind="attr: {href: webSite}">
+        <p class="site-link" data-bind="text: webSite"></p>
+      </a>
+      <div class="error" data-bind="ifnot: fSRequestError">
+        <a class="site-link" data-bind="attr: {href: fSquareLink}">
+          <p class="site-link">Foursquare page</p>
+        </a>
+        <p class="detail-content" data-bind="text: address"></p>
+        <p class="detail-content" data-bind="if: fSquareCategory">
+          Category:
+          <span data-bind="text: fSquareCategory"></span>
+        </p>
+        <p class="detail-content" data-bind="text: likes"></p>
+        <img id="fSquareLogo" src="images/Powered-by-Foursquare-one-color-300.png" alt="Foursquare logo">
+
+        <div class="infoWindow-photos" data-bind="visible: photos().length > 0">
+          <div data-bind="foreach: photos">
+            <img data-bind="attr: {src: $data}" alt="Winery photos" />
+          </div>
+        </div>
+
+        <div class="info-photos" data-bind="visible: photos().length === 0">
+          <p>No photos found</p>
+        </div>
+      </div>
+      <div class="fSError" data-bind="if: fSRequestError">
+        <p data-bind="text: fSRequestError"></p>
+      </div>
+    </article>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
+  <script src="./data/wineries.js"></script>
+  <script src="./index.js"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBdJRlFQ3PS8weHyGfpKDDn2n11l2PUUC4&v=3&callback=initMap"
+    onerror="mapError()"></script>
+</body>
+
+</html>

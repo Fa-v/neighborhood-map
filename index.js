@@ -1,22 +1,11 @@
-import ko from 'knockout';
-import $ from 'jquery';
-import jsonData from './data/wineries.js';
-import './styles.css';
-import fSImage from './images/Powered-by-Foursquare-one-color-300.png';
-const mapsApi = require('google-maps-api')('AIzaSyBdJRlFQ3PS8weHyGfpKDDn2n11l2PUUC4');
-const fourSquareElement = document.getElementById('fSquareLogo');
-fourSquareElement.src = fSImage;
+"use strict";
 
 let map;
-
-// Load Google Maps api asynchronously
-mapsApi().then(initMap, mapError);
 
 /**
  * @description Initializing Google maps and creating the binding for the view model
  */
-function initMap(response) {
-  console.log('response', response);
+function initMap() {
   map = new google.maps.Map(document.getElementById('map'), {
     center: {
       lat: 40.3050155,
@@ -40,30 +29,30 @@ function mapError() {
  * @param {array} winery
  */
 let Winery = function (winery) {
-  this.name = ko.observable(winery.name);
-  this.address = ko.observable(winery.address);
-  this.latitude = ko.observable(winery.lat);
-  this.longitude = ko.observable(winery.lng);
-  this.venueId = ko.observable(winery.venueId);
+  this.name = winery.name;
+  this.address = winery.address;
+  this.latitude = winery.lat;
+  this.longitude = winery.lng;
+  this.venueId = winery.venueId;
   this.photos = ko.observableArray([]);
-  this.likes = ko.observable();
+  this.likes = null;
   this.fSquareLink = ko.observable();
   this.fSquareCategory = ko.observable(null);
   this.webSite = ko.observable(winery.web);
   this.requestNotMade = ko.observable(true);
-  this.requestError = ko.observable(null);
+  this.fSRequestError = ko.observable(null);
 
   this.coords = ko.computed(function () {
     return {
-      'lat': this.latitude(),
-      'lng': this.longitude()
+      'lat': this.latitude,
+      'lng': this.longitude
     }
   }, this);
 
   /* creating markers as observables */
   this.marker = ko.observable(new google.maps.Marker({
     position: this.coords(),
-    title: this.name(),
+    title: this.name,
     animation: google.maps.Animation.DROP,
     icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Bunch_of_grapes_icon.svg/32px-Bunch_of_grapes_icon.svg.png'
   }));
@@ -74,7 +63,7 @@ let Winery = function (winery) {
  * @param {object} winery instance of a winery
  */
 function getFoursquareData(winery) {
-  const venueId = winery.venueId();
+  const venueId = winery.venueId;
   const baseUrl = `https://api.foursquare.com/v2/venues/${venueId}`;
   const clientInfo = `?client_id=K44JY0THSY3L2X0VRKZ1JY2FEQULQVSTDIFOZDNNHTURX3ZF
       &client_secret=TSK1DF0XMZKHZFZYMA3Q0XXGA5FIWO4OWQM4OTTECLHUPZJJ`;
@@ -92,19 +81,18 @@ function getFoursquareData(winery) {
 
       photos.length > 0 && photos.forEach(photo => {
         const photoUrl = photo.prefix.concat('width300', photo.suffix);
-
         winery.photos.push(photoUrl);
-        winery.likes(data.response.venue.likes.summary);
+        winery.likes = data.response.venue.likes.summary;
         winery.fSquareLink(data.response.venue.canonicalUrl);
         winery.fSquareCategory(data.response.venue.categories[0].name);
       });
     },
     error: function () {
-      winery.requestError('Error getting foursquare data.');
+      const errorMessage = 'We couldn\'t connect whit Foursquare.'
+      winery.fSRequestError(errorMessage);
     }
   });
 };
-
 
 /**
  * @description Main view model
@@ -139,7 +127,7 @@ let ViewModel = function (data) {
     const search = this.searchText().toLowerCase();
 
     return ko.utils.arrayFilter(this.wineries(), function (winery) {
-      return winery.name().toLowerCase().indexOf(search) >= 0;
+      return winery.name.toLowerCase().indexOf(search) >= 0;
     });
   }.bind(this));
 
@@ -153,9 +141,9 @@ ko.bindingHandlers.googleMap = {
     const modelData = bindingContext.$data;
     const wineries = modelData.wineries();
     const filteredWineries = modelData.filterWineries();
-    const filteredWineryNames = filteredWineries.map(winery => winery.name());
+    const filteredWineryNames = filteredWineries.map(winery => winery.name);
     const markersToRemove = wineries.filter(winery => {
-      return filteredWineryNames.indexOf(winery.name()) === -1;
+      return filteredWineryNames.indexOf(winery.name) === -1;
     });
 
     filteredWineries.forEach(winery => {
@@ -194,7 +182,6 @@ ko.bindingHandlers.createInfoWindow = {
     const infoWindow = modelData.infoWindow;
     const wineries = modelData.wineries();
     const winery = valueAccessor().winery();
-
     infoWindow.close();
 
     if (winery) {

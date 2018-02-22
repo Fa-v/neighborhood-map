@@ -2,7 +2,7 @@
 * Resetting margin, padding and border values for all browsers and setting a box-model
 */
 *,
-html{
+html {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -87,18 +87,18 @@ body {
 /*
 * Sets the height to the map
 */
-#map {
+.map-canvas {
   bottom: 0px;
   height: 100%;
   width: 75%;
   right: 0px;
 }
 
-#wineryDetail {
+.winery-detail {
   display: none;
 }
 
-#infoWindow {
+.info-window {
   max-height: 300px;
 }
 
@@ -106,7 +106,8 @@ body {
   font-size: var(--title-font-size, 1.5em);
 }
 
-.detail-content, p {
+.detail-content,
+p {
   font-size: var(--subtitle-font-size, 1.2em);
   justify-content: flex-start;
   margin: 10px;
@@ -121,7 +122,10 @@ body {
   font-weight: bold;
 }
 
-.error-message {
+.error-message,
+.fSError {
+  text-align: center;
+  margin-top: 2em;
   color: red;
 }
 
@@ -142,7 +146,7 @@ label {
     padding: 20px;
   }
 
-  #map {
+  .map-canvas {
     width: 100%;
   }
 }
